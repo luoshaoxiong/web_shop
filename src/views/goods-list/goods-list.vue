@@ -1,12 +1,16 @@
 <template>
-  <main-header></main-header>
+  <div>
+    <main-header></main-header>
+    <breadcrumb></breadcrumb>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
-import mainHeader from '@/views/common/main-header'
+import mainHeader from '@/views/common/main-header';
+import breadcrumb from '@/views/common/breadcrumb';
 
 export default {
-  components: {mainHeader}
+  components: {mainHeader, breadcrumb}
 }
 
 </script>

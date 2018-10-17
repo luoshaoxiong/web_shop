@@ -1,11 +1,13 @@
 <template>
   <header>
-    <div class="logo-container">
-      <img class="logo" src="../../assets/logo.png">
-    </div>
-    <div class="menu-container">
-      <span class="user-msg"></span>
-      <span class="cart"></span>
+    <div class="layout-container">
+      <div class="logo-container">
+        <img class="logo" src="../../assets/logo.png">
+      </div>
+      <div class="menu-container">
+        <span class="user-msg">Login</span>
+        <span class="iconfont icon-cart"></span>
+      </div>
     </div>
   </header>
 </template>
@@ -14,16 +16,37 @@
 
 </script>
 
-<style lang="sass" rel="stylesheet/sass" scope>
+<style lang="scss" rel="stylesheet/scss" scope>
+  @import "../../assets/css/variable";
+
+  header {
+    background-color: #fff;
+    height: $header-height;
+    line-height: $header-height;
+  }
 
   .logo-container {
     float: left;
-    margin-left: 60px;
-    height: 80px;
+    height: $header-height;
   }
 
   .logo {
-    height: 80px;
+    height: $header-height;
     padding: 16px;
+  }
+
+  .menu-container {
+    float: right;
+    height: $header-height;
+  }
+
+  .user-msg {
+    font-size: 16px;
+  }
+
+  .icon-cart {
+    margin-left: 20px;
+    font-size: 18px;
+    font-weight: bold;
   }
 </style>
