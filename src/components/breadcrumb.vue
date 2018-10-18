@@ -16,11 +16,12 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  @import "../../assets/css/variable";
+  @import "../assets/css/variable";
 
   nav {
     height: $breadcrumb;
     line-height: $breadcrumb;
+    background-color: #f0f0f0;
   }
 
   .nav-container {
