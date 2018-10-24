@@ -3,3 +3,48 @@
   margin: 0 auto;
 }
 
+.btn {
+  display: inline-block;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 14px;
+  font-family: moderat,sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .25em;
+  white-space: nowrap;
+}
+
+.btn-plain {
+  border: 1px solid #d1434a;
+  background-color: #fff;
+  color: #d1434a;
+}
+
+.btn-plain:hover {
+  background-color: #ffe5e6;
+}
+
+.btn-main {
+  border-color: #d1434a;
+  background-color: #d1434a;
+  color: #fff;
+}
+
+.btn-main:hover {
+  background-color: #f16f75;
+  border-color: #f16f75;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border: 1px solid #999;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}

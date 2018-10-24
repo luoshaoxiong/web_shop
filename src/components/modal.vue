@@ -41,7 +41,7 @@ export default {
     left: 50%;
     min-width: 535px;
     min-height: 100px;
-    padding: 40px;
+    padding: 60px 50px;
     background-color: #fff;
     transform: translate(-50%, -50%);
   }

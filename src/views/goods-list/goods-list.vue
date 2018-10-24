@@ -22,7 +22,7 @@
           <dl>
             <dt>自拍杆</dt>
             <dd>￥39.00</dd>
-            <dd><button @click="addCart()">加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
         <li>
@@ -30,7 +30,7 @@
           <dl>
             <dt>自拍杆</dt>
             <dd>￥39.00</dd>
-            <dd><button>加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
         <li>
@@ -38,7 +38,7 @@
           <dl>
             <dt>自拍杆</dt>
             <dd>￥39.00</dd>
-            <dd><button>加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
         <li>
@@ -46,7 +46,7 @@
           <dl>
             <dt>自拍杆</dt>
             <dd>￥39.00</dd>
-            <dd><button>加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
         <li>
@@ -54,7 +54,7 @@
           <dl>
             <dt>自拍杆</dt>
             <dd>￥39.00</dd>
-            <dd><button>加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
         <li>
@@ -62,7 +62,7 @@
           <dl>
             <dt>自拍杆</dt>
             <dd>￥39.00</dd>
-            <dd><button>加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
         <li>
@@ -70,16 +70,40 @@
           <dl>
             <dt>自拍杆</dt>
             <dd>￥39.00</dd>
-            <dd><button>加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
+          </dl>
+        </li>
+        <li>
+          <img src="/static/images/zipai.jpg">
+          <dl>
+            <dt>自拍杆</dt>
+            <dd>￥39.00</dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
+          </dl>
+        </li>
+        <li>
+          <img src="/static/images/zipai.jpg">
+          <dl>
+            <dt>自拍杆</dt>
+            <dd>￥39.00</dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
+          </dl>
+        </li>
+        <li>
+          <img src="/static/images/zipai.jpg">
+          <dl>
+            <dt>自拍杆</dt>
+            <dd>￥39.00</dd>
+            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
       </ul>
     </div>
-    <modal :show="modalShow">
-      <div>加入购物车成功!</div>
-      <div>
-        <button>继续购物</button>
-        <button>查看购物车</button>
+    <modal :show="modalShow" @close="closeModal()">
+      <div class="modal-message">加入购物车成功!</div>
+      <div class="clearfix">
+        <button class="btn btn-plain continue-btn" @close="closeModal()">继续购物</button>
+        <button class="btn btn-main see-btn" @click="seeCart()">查看购物车</button>
       </div>
     </modal>
   </div>
@@ -98,6 +122,12 @@ export default {
   methods: {
     addCart () {
       this.modalShow = true;
+    },
+    closeModal () {
+      this.modalShow = false;
+    },
+    seeCart () {
+      this.$router.push({path: '/cart'});
     }
   }
 }
@@ -204,23 +234,17 @@ export default {
     font-size: 1.25em;
   }
 
-  .goods-list ul li button {
-    display: inline-block;
-    width: 100%;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
+  .modal-message {
+    min-height: 5.65em;
     font-size: 14px;
-    font-family: moderat,sans-serif;
-    font-weight: 700;
-    border: 1px solid #d1434a;
-    color: #d1434a;
-    text-transform: uppercase;
-    letter-spacing: .25em;
-    white-space: nowrap;
+    font-weight: 200;
+    text-align: center;
   }
 
-  .goods-list ul li button:hover {
-    background-color: #ffe5e6;
+  .continue-btn,
+  .see-btn {
+    float: left;
+    width: 45%;
+    margin: 0 2.5%;
   }
 </style>
