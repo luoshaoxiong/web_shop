@@ -2,7 +2,9 @@
   <div id="app">
     <main-header></main-header>
     <breadcrumb></breadcrumb>
-    <router-view/>
+    <div class="layout-container">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -19,4 +21,8 @@ export default {
 <style>
   @import '../src/assets/font/iconfont/iconfont.css';
   @import '../src/assets/css/common.scss';
+
+  body {
+    background-color: #f5f7fc;
+  }
 </style>
