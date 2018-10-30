@@ -44,7 +44,7 @@
       </div>
       <div class="footer-right">
         <div>Item total:<span class="item-total">￥</span></div>
-        <button class="btn btn-main checkout-btn">checkout</button>
+        <router-link class="btn btn-main checkout-btn" to="/address">checkout</router-link>
       </div>
     </div>
   </div>

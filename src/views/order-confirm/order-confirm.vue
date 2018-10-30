@@ -34,15 +34,15 @@
       </ul>
     </div>
     <ul class="price-count-wrap">
-      <li><span>Item subtotal:</span></li>
-      <li><span>Shipping:</span></li>
-      <li><span>Discount:</span></li>
-      <li><span>Tax:</span></li>
-      <li><span>Order total:</span></li>
+      <li><span>Item subtotal:</span><span class="price-text">￥10.00</span></li>
+      <li><span>Shipping:</span><span class="price-text">￥10.00</span></li>
+      <li><span>Discount:</span><span class="price-text">￥10.00</span></li>
+      <li><span>Tax:</span><span class="price-text">￥10.00</span></li>
+      <li><span>Order total:</span><span class="price-text">￥100.00</span></li>
     </ul>
     <footer class="clearfix">
       <router-link class="btn btn-plain previous" to="/address">Previous</router-link>
-      <router-link class="btn btn-main next" to="/address">Proceed to payment</router-link>
+      <router-link class="btn btn-main next" to="/success">Proceed to payment</router-link>
     </footer>
   </div>
 </template>
@@ -241,14 +241,29 @@ export default {
     margin-top: 40px;
   }
 
+  .price-count-wrap {
+    display: table;
+    width: 100%;
+  }
+
+  .price-count-wrap li {
+    display: table-row;
+  }
+
   .price-count-wrap li span {
     display: table-cell;
     height: 36px;
+    line-height: 36px;
     padding-right: 10px;
     vertical-align: top;
     text-align: right;
     font-size: 18px;
     color: #999;
+  }
+
+  .price-count-wrap li .price-text {
+    width: 100px;
+    color: #666;
   }
 
   footer {
