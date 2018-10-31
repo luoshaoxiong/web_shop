@@ -17,94 +17,32 @@
     </div>
     <div class="goods-list">
       <ul class="clearfix">
-        <li>
-          <img src="/static/images/zipai.jpg">
+        <li v-for="(item, index) in goodsList" :key="index">
+          <img v-lazy="'/static/images/' + item.productImage">
           <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
-          </dl>
-        </li>
-        <li>
-          <img src="/static/images/zipai.jpg">
-          <dl>
-            <dt>自拍杆</dt>
-            <dd>￥39.00</dd>
+            <dt>{{item.productName}}</dt>
+            <dd>￥{{item.salePrice}}</dd>
             <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
           </dl>
         </li>
       </ul>
+      <div
+        v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="busy"
+        infinite-scroll-distance="20">
+        <img src="../../assets/loading/loading-spinning-bubbles.svg" v-show="loading" class="loading">
+      </div>
     </div>
-    <modal :show="modalShow" @close="closeModal()">
+    <modal :show="successMdShow" @close="closeSuccessMd()">
       <div class="modal-message">加入购物车成功!</div>
       <div class="clearfix">
-        <button class="btn btn-plain continue-btn" @close="closeModal()">继续购物</button>
+        <button class="btn btn-plain continue-btn" @close="closeSuccessMd()">继续购物</button>
         <button class="btn btn-main see-btn" @click="seeCart()">查看购物车</button>
       </div>
+    </modal>
+    <modal :show="noAccessMdShow" @close="closeNoAccessMd()">
+      <div class="modal-message">您当前尚未登录!</div>
+      <button class="btn btn-plain hide-btn" @click="closeNoAccessMd()">关闭</button>
     </modal>
   </div>
 </template>
@@ -116,25 +54,56 @@ export default {
   components: {modal},
   data () {
     return {
-      modalShow: false
+      successMdShow: false,
+      noAccessMdShow: false,
+      goodsList: [],
+      busy: false,
+      loading: false
     }
   },
+  mounted () {
+    this.getGoodsList();
+  },
   methods: {
-    addCart () {
-      this.modalShow = true;
+    getGoodsList () {
+      this.loading = true;
+      this.axios.get('/goods/list')
+        .then(res => {
+          this.goodsList = res.data.result.list;
+          this.loading = false;
+        })
     },
-    closeModal () {
-      this.modalShow = false;
+    addCart () {
+      // this.successMdShow = true;
+      this.noAccessMdShow = true;
+    },
+    closeSuccessMd () {
+      this.successMdShow = false;
+    },
+    closeNoAccessMd () {
+      this.noAccessMdShow = false;
     },
     seeCart () {
       this.$router.push({path: '/cart'});
+    },
+    loadMore () {
+      this.busy = true;
+      this.loading = true;
+      this.axios.get('/goods/list')
+        .then(res => {
+          this.goodsList = this.goodsList.concat(res.data.result.list);
+          this.busy = false;
+          this.loading = false;
+        })
     }
   }
 }
 
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scope>
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/css/variable";
+
   .filter-bar {
     height: 55px;
     line-height: 55px;
@@ -150,7 +119,7 @@ export default {
   }
 
   .option:hover {
-    color: #ee7a23;
+    color: $color-main;
     cursor: pointer;
   }
 
@@ -182,6 +151,7 @@ export default {
   .filter-aside dd:hover {
     border-left: 2px solid #ee7a23;
     padding-left: 15px;
+    color: $color-main;
     cursor: pointer;
   }
 
@@ -210,7 +180,8 @@ export default {
     margin-right: 0;
   }
 
-  .goods-list ul li img {
+  .goods-list ul li img,
+  .goods-list ul li .btn {
     width: 100%;
   }
 
@@ -224,6 +195,7 @@ export default {
     padding-bottom: 10px;
     font-family: moderat,sans-serif;
     font-weight: 700;
+    color: #333;
     overflow: hidden;
   }
 
@@ -246,5 +218,16 @@ export default {
     float: left;
     width: 45%;
     margin: 0 2.5%;
+  }
+
+  .hide-btn {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+  }
+
+  .loading {
+    display: block;
+    margin: 0 auto;
   }
 </style>

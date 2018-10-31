@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
   .mask {
     position: fixed;
     top: 0;
@@ -46,7 +46,7 @@ export default {
     transform: translate(-50%, -50%);
   }
 
-  .close-btn {
+  .modal .close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -57,7 +57,7 @@ export default {
     color: #ccc;
   }
 
-  .close-btn:hover {
+  .modal .close-btn:hover {
     color: #aaa;
     cursor: pointer;
   }

@@ -1,53 +1,73 @@
 {
-  "status":"0",
-  "result":[
-    {
-      "productId":"10001",
-      "productName":"小米6",
-      "prodcutPrice":"2499",
-      "prodcutImg":"mi6.jpg"
-    },
-    {
-      "productId":"10002",
-      "productName":"小米笔记本",
-      "prodcutPrice":"3999",
-      "prodcutImg":"note.jpg"
-    },
-    {
-      "productId":"10003",
-      "productName":"小米6",
-      "prodcutPrice":"2499",
-      "prodcutImg":"mi6.jpg"
-    },
-    {
-      "productId":"10004",
-      "productName":"小米6",
-      "prodcutPrice":"2499",
-      "prodcutImg":"1.jpg"
-    },
-    {
-      "productId":"10005",
-      "productName":"小米6",
-      "prodcutPrice":"2499",
-      "prodcutImg":"2.jpg"
-    },
-    {
-      "productId":"10006",
-      "productName":"小米6",
-      "prodcutPrice":"2499",
-      "prodcutImg":"3.jpg"
-    },
-    {
-      "productId":"10007",
-      "productName":"小米6",
-      "prodcutPrice":"2499",
-      "prodcutImg":"4.jpg"
-    },
-    {
-      "productId":"10008",
-      "productName":"小米6",
-      "prodcutPrice":"2499",
-      "prodcutImg":"5.jpg"
-    }
-  ]
+  "status": "0",
+  "msg": "",
+  "result": {
+    "count": 8,
+    "list": [
+      {
+        "_id": "58e7050398dab115d336b3f2",
+        "productId": "201710007",
+        "productName": "自拍杆",
+        "salePrice": 39,
+        "productImage": "zipai.jpg",
+        "productUrl": ""
+      },
+      {
+        "_id": "58e704ef98dab115d336b3f1",
+        "productId": "201710002",
+        "productName": "智能插线板",
+        "salePrice": 59,
+        "productImage": "6.jpg",
+        "productUrl": ""
+      },
+      {
+        "_id": "58c284d7117a2e6599abef5e",
+        "productId": "201710004",
+        "productName": "头戴式耳机-3",
+        "salePrice": 80,
+        "productImage": "2.jpg",
+        "productUrl": ""
+      },
+      {
+        "_id": "58e7058498dab115d336b3fc",
+        "productId": "201710017",
+        "productName": "小钢炮蓝牙音箱",
+        "salePrice": 129,
+        "productImage": "1.jpg",
+        "productUrl": ""
+      },
+      {
+        "_id": "58e7058d98dab115d336b3fd",
+        "productId": "201710018",
+        "productName": "智能摄像机",
+        "salePrice": 389,
+        "productImage": "photo.jpg",
+        "productUrl": ""
+      },
+      {
+        "_id": "58e7057798dab115d336b3fb",
+        "productId": "201710016",
+        "productName": "Ear700",
+        "salePrice": 700,
+        "productImage": "16.jpg",
+        "productUrl": ""
+      },
+      {
+        "_id": "58e7051698dab115d336b3f4",
+        "productId": "201710009",
+        "productName": "IH 电饭煲",
+        "salePrice": 999,
+        "productImage": "9.jpg",
+        "productUrl": ""
+      },
+      {
+        "_id": "58e7052a98dab115d336b3f6",
+        "productId": "201710011",
+        "productName": "Ear1000",
+        "salePrice": 1000,
+        "productImage": "11.jpg",
+        "productUrl": ""
+      }
+    ]
+  }
 }
