@@ -27,10 +27,11 @@
         </li>
       </ul>
       <div
+        class="loading"
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="busy"
         infinite-scroll-distance="20">
-        <img src="../../assets/loading/loading-spinning-bubbles.svg" v-show="loading" class="loading">
+        <img src="../../assets/loading/loading-spinning-bubbles.svg" v-show="loading">
       </div>
     </div>
     <modal :show="successMdShow" @close="closeSuccessMd()">
@@ -67,10 +68,12 @@ export default {
   methods: {
     getGoodsList () {
       this.loading = true;
+      this.busy = true;
       this.axios.get('/goods/list')
         .then(res => {
           this.goodsList = res.data.result.list;
           this.loading = false;
+          this.busy = false;
         })
     },
     addCart () {
@@ -227,7 +230,8 @@ export default {
   }
 
   .loading {
-    display: block;
-    margin: 0 auto;
+    height: 80px;
+    margin: 30px 0;
+    text-align: center;
   }
 </style>
