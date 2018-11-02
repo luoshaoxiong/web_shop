@@ -43,7 +43,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     watchOptions: {
       poll: config.dev.poll,
     },
-    before: require('../mock')
+    // before: require('../mock') // 本地调试数据
   },
   plugins: [
     new webpack.DefinePlugin({

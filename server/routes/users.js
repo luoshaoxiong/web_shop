@@ -8,7 +8,7 @@ router.get('/', function (req, res) {
 });
 
 router.post('/login', function (req, res, next) {
-  let params = {
+  var params = {
     userName: req.body.userName,
     userPwd: req.body.userPwd
   };
