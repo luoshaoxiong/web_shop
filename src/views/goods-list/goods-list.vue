@@ -67,14 +67,14 @@ export default {
   },
   methods: {
     getGoodsList () {
-      this.loading = true;
-      this.busy = true;
-      this.axios.get('/goods/list')
-        .then(res => {
-          this.goodsList = res.data.result.list;
-          this.loading = false;
-          this.busy = false;
-        })
+      // this.loading = true;
+      // this.busy = true;
+      // this.axios.get('/goods/list')
+      //   .then(res => {
+      //     this.goodsList = res.data.result.list;
+      //     this.loading = false;
+      //     this.busy = false;
+      //   })
     },
     addCart () {
       // this.successMdShow = true;
@@ -94,7 +94,7 @@ export default {
       this.loading = true;
       this.axios.get('/goods/list')
         .then(res => {
-          this.goodsList = this.goodsList.concat(res.data.result.list);
+          this.goodsList = this.goodsList.concat(res.data.result);
           this.busy = false;
           this.loading = false;
         })

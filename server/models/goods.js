@@ -7,4 +7,4 @@ var productSchema = new mongoose.Schema({
   'salePrice': Number
 });
 
-module.exports = mongoose.model('Goods', productSchema);
+module.exports = mongoose.model('product', productSchema, 'product'); // 记得第三个参数写上集合名字，否则默认是加s的

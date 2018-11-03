@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 // });
 
 // 连接数据库
-mongoose.connect('mongodb://127.0.0.1:27017/webShop');
+mongoose.connect('mongodb://127.0.0.1:27017/webShop', {useNewUrlParser: true});
 
 mongoose.connection.on('connected', function () {
   console.log('MongoDB connected success');
@@ -30,8 +30,7 @@ router.get('/list', function (req, res, next) {
     sort: req.body.sort,
     priceRange: req.body.priceRange
   };
-  console.log(666, Goods.find());
-  Goods.find(params, function (err, doc) {
+  Goods.find({}, function (err, doc) {
     if (err) {
       res.json({
         status: 1,
