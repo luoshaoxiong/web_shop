@@ -8,11 +8,10 @@
     <div class="filter-aside">
       <dl>
         <dt>price:</dt>
-        <dd>All</dd>
-        <dd>0.00 - 100.00</dd>
-        <dd>100.00 - 500.00</dd>
-        <dd>500.00 - 1000.00</dd>
-        <dd>1000.00 - 2000.00</dd>
+        <dd v-for="(item, index) in priceRange" :key="index">
+          <template v-if="item.end === Number.MAX_VALUE">All</template>
+          <template v-else>{{item.start | formatCurrency('￥', 2)}} - {{item.end | formatCurrency('￥', 2)}}</template>
+        </dd>
       </dl>
     </div>
     <div class="goods-list">
@@ -50,6 +49,7 @@
 
 <script type="text/ecmascript-6">
 import modal from '@/components/modal';
+import formatCurrency from '@/util/format-currency';
 
 export default {
   components: {modal},
@@ -58,6 +58,28 @@ export default {
       successMdShow: false,
       noAccessMdShow: false,
       goodsList: [],
+      priceRange: [
+        {
+          start: 0,
+          end: Number.MAX_VALUE
+        },
+        {
+          start: 0,
+          end: 100
+        },
+        {
+          start: 100,
+          end: 500
+        },
+        {
+          start: 500,
+          end: 1000
+        },
+        {
+          start: 1000,
+          end: 2000
+        }
+      ],
       busy: false,
       loading: false
     }
@@ -99,7 +121,8 @@ export default {
           this.loading = false;
         })
     }
-  }
+  },
+  filters: {formatCurrency}
 }
 
 </script>
