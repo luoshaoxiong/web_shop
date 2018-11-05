@@ -2,15 +2,18 @@
   <div class="layout-container clearfix">
     <div class="filter-bar">
       <span>Sort by:</span>
-      <span class="option">Default</span>
-      <span class="option">Price</span>
+      <span class="option" :class="{'current': sortType === 0}" @click="changeSortType(0)">Default</span>
+      <span class="option" :class="{'current': sortType !== 0}" @click="changeSortType(sortType !== -1 ? -1 : 1)">Price
+        <span class="iconfont icon-descending" v-if="sortType !== 1"></span>
+        <span class="iconfont icon-ascending" v-if="sortType === 1"></span>
+      </span>
     </div>
     <div class="filter-aside">
       <dl>
         <dt>price:</dt>
-        <dd v-for="(item, index) in priceRange" :key="index">
-          <template v-if="item.end === Number.MAX_VALUE">All</template>
-          <template v-else>{{item.start | formatCurrency('￥', 2)}} - {{item.end | formatCurrency('￥', 2)}}</template>
+        <dd v-for="(item, index) in priceRange" :key="index" :class="{'current': isInRange(item)}" @click="setPriceRange(item.start, item.end)">
+          <span v-if="item.end === Number.MAX_VALUE">All</span>
+          <span v-else>{{item.start | formatCurrency('￥', 2)}} - {{item.end | formatCurrency('￥', 2)}}</span>
         </dd>
       </dl>
     </div>
@@ -80,6 +83,11 @@ export default {
           end: 2000
         }
       ],
+      priceStart: 0,
+      priceEnd: Number.MAX_VALUE,
+      sortType: 0,
+      currentPage: 1,
+      pageSize: 8,
       busy: false,
       loading: false
     }
@@ -89,14 +97,21 @@ export default {
   },
   methods: {
     getGoodsList () {
-      // this.loading = true;
-      // this.busy = true;
-      // this.axios.get('/goods/list')
-      //   .then(res => {
-      //     this.goodsList = res.data.result.list;
-      //     this.loading = false;
-      //     this.busy = false;
-      //   })
+      this.loading = true;
+      this.busy = true;
+      let params = {
+        priceStart: this.priceStart,
+        priceEnd: this.priceEnd,
+        sortType: this.sortType,
+        currentPage: this.currentPage,
+        pageSize: this.pageSize
+      };
+      this.axios.post('/goods/list', params)
+        .then(res => {
+          this.goodsList = this.goodsList.concat(res.data.result);
+          this.loading = false;
+          this.busy = !res.data.result.length;
+        })
     },
     addCart () {
       // this.successMdShow = true;
@@ -112,14 +127,28 @@ export default {
       this.$router.push({path: '/cart'});
     },
     loadMore () {
-      this.busy = true;
-      this.loading = true;
-      this.axios.get('/goods/list')
-        .then(res => {
-          this.goodsList = this.goodsList.concat(res.data.result);
-          this.busy = false;
-          this.loading = false;
-        })
+      if (!this.loading) {
+        setTimeout(() => {
+          this.currentPage++;
+          this.getGoodsList();
+        }, 200);
+      }
+    },
+    setPriceRange (start, end) {
+      this.priceStart = start;
+      this.priceEnd = end;
+      this.currentPage = 1;
+      this.goodsList = [];
+      this.getGoodsList();
+    },
+    changeSortType (type) {
+      this.sortType = type;
+      this.currentPage = 1;
+      this.goodsList = [];
+      this.getGoodsList();
+    },
+    isInRange (item) {
+      return item.start === this.priceStart && item.end === this.priceEnd;
     }
   },
   filters: {formatCurrency}
@@ -149,6 +178,10 @@ export default {
     cursor: pointer;
   }
 
+  .option.current {
+    color: $color-main;
+  }
+
   .filter-aside {
     float: left;
     width: 230px;
@@ -174,7 +207,8 @@ export default {
     transition: padding-left .3s ease-out;
   }
 
-  .filter-aside dd:hover {
+  .filter-aside dd:hover,
+  .filter-aside .current {
     border-left: 2px solid #ee7a23;
     padding-left: 15px;
     color: $color-main;
@@ -254,7 +288,7 @@ export default {
 
   .loading {
     height: 80px;
-    margin: 30px 0;
+    margin: 40px 0;
     text-align: center;
   }
 </style>
