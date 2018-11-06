@@ -92,7 +92,7 @@ router.post('/add', function (req, res, next) {
           }
         });
       } else {
-        Goods.find({productId: id}, function (err, productDoc) {
+        Goods.findOne({productId: id}, function (err, productDoc) {
           if (err) {
             res.json({
               status: 1,

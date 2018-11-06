@@ -19,7 +19,7 @@
             <span class="product-name">{{item.productName}}</span>
           </div>
           <div class="cart-tab-2 td">
-            <span class="price">￥{{item.salePrice}}</span>
+            <span class="price">{{item.salePrice | currency('￥', 2)}}</span>
           </div>
           <div class="cart-tab-3 td">
             <div class="select-area">
@@ -29,7 +29,7 @@
             </div>
           </div>
           <div class="cart-tab-4 td">
-            <span class="total-price">￥{{item.salePrice}}</span>
+            <span class="total-price">{{item.salePrice | currency('￥', 2)}}</span>
           </div>
           <div class="cart-tab-5 td">
             <span class="icon iconfont icon-shanchuicon"></span>
@@ -43,7 +43,7 @@
           <input type="checkbox" class="checkbox" id="selectAll">Select all</label>
       </div>
       <div class="footer-right">
-        <div>Item total:<span class="item-total">￥</span></div>
+        <div>Item total:<span class="item-total">{{total | currency('￥', 2)}}</span></div>
         <router-link class="btn btn-main checkout-btn" to="/address">checkout</router-link>
       </div>
     </div>
@@ -55,61 +55,29 @@ export default {
   name: 'cart',
   data () {
     return {
-      cartList: [
-        {
-          'productImage': 'zipai.jpg',
-          'salePrice': '39',
-          'productName': '自拍杆',
-          'productId': '201710007',
-          '_id': '58e7050398dab115d336b3f2',
-          'productNum': '7',
-          'checked': '0'
-        },
-        {
-          'productImage': '6.jpg',
-          'salePrice': '59',
-          'productName': '智能插线板',
-          'productId': '201710002',
-          '_id': '58e704ef98dab115d336b3f1',
-          'productNum': '2',
-          'checked': '0'
-        },
-        {
-          'productImage': '10.jpg',
-          'salePrice': '2099',
-          'productName': '小米电视4A',
-          'productId': '201710010',
-          '_id': '58e7052198dab115d336b3f5',
-          'productNum': '1',
-          'checked': '0'
-        },
-        {'productImage': '8.jpg',
-          'salePrice': '1999',
-          'productName': '小米净水器',
-          'productId': '201710008',
-          '_id': '58e7050c98dab115d336b3f3',
-          'productNum': '1',
-          'checked': '0'
-        },
-        {
-          'productImage': '1.jpg',
-          'salePrice': '129',
-          'productName': '小钢炮蓝牙音箱',
-          'productId': '201710017',
-          '_id': '58e7058498dab115d336b3fc',
-          'productNum': '1',
-          'checked': '0'
-        },
-        {
-          'productImage': '2.jpg',
-          'salePrice': '80',
-          'productName': '头戴式耳机-3',
-          'productId': '201710004',
-          '_id': '58c284d7117a2e6599abef5e',
-          'productNum': '1',
-          'checked': '1'
-        }
-      ]
+      cartList: []
+    }
+  },
+  mounted () {
+    this.getCartList();
+  },
+  computed: {
+    total () {
+      var total = 0;
+      this.cartList.forEach(item => {
+        total += item.productNum * item.salePrice;
+      });
+      return total;
+    }
+  },
+  methods: {
+    getCartList () {
+      this.axios.get('/user/cartList')
+        .then(res => {
+          if (res.data.status === 0) {
+            this.cartList = res.data.result;
+          }
+        })
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="mask" v-show="show">
-    <div class="modal">
+    <div class="modal clearfix">
       <span class="close-btn" @click="close()">&times;</span>
       <slot></slot>
     </div>

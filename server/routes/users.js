@@ -32,7 +32,8 @@ router.post('/login', function (req, res, next) {
           status: 0,
           message: 'success',
           result: {
-            userName: doc.userName
+            userName: doc.userName,
+            cartCount: doc.cartList.length
           }
         });
       }
@@ -61,7 +62,7 @@ router.get('/checkLogin', function (req, res, next) {
     res.json({
       status: 0,
       message: 'success',
-      result: req.cookies.userName || ''
+      result: req.cookies.userId || ''
     });
   } else {
     res.json({
@@ -69,6 +70,26 @@ router.get('/checkLogin', function (req, res, next) {
       message: '未登录'
     });
   }
+});
+
+router.get('/cartList', function (req, res, next) {
+  var params = {
+    userId: req.cookies.userId
+  };
+  User.findOne(params, function (err, doc) {
+    if (err) {
+      res.json({
+        status: 1,
+        message: err.message
+      });
+    } else {
+      res.json({
+        status: 0,
+        message: 'success',
+        result: doc.cartList
+      });
+    }
+  });
 });
 
 module.exports = router;

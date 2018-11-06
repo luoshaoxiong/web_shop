@@ -13,7 +13,7 @@
         <dt>price:</dt>
         <dd v-for="(item, index) in priceRange" :key="index" :class="{'current': isInRange(item)}" @click="setPriceRange(item.start, item.end)">
           <span v-if="item.end === Number.MAX_VALUE">All</span>
-          <span v-else>{{item.start | formatCurrency('￥', 2)}} - {{item.end | formatCurrency('￥', 2)}}</span>
+          <span v-else>{{item.start | currency('￥', 2)}} - {{item.end | currency('￥', 2)}}</span>
         </dd>
       </dl>
     </div>
@@ -24,7 +24,7 @@
           <dl>
             <dt>{{item.productName}}</dt>
             <dd>￥{{item.salePrice}}</dd>
-            <dd><button class="btn btn-plain" @click="addCart()">加入购物车</button></dd>
+            <dd><button class="btn btn-plain" @click="addCart(item.productId)">加入购物车</button></dd>
           </dl>
         </li>
       </ul>
@@ -39,8 +39,8 @@
     <modal :show="successMdShow" @close="closeSuccessMd()">
       <div class="modal-message">加入购物车成功!</div>
       <div class="clearfix">
-        <button class="btn btn-plain continue-btn" @close="closeSuccessMd()">继续购物</button>
-        <button class="btn btn-main see-btn" @click="seeCart()">查看购物车</button>
+        <button class="btn btn-plain continue-btn" @click="closeSuccessMd()">继续购物</button>
+        <router-link class="btn btn-main see-btn" to="/cart">查看购物车</router-link>
       </div>
     </modal>
     <modal :show="noAccessMdShow" @close="closeNoAccessMd()">
@@ -52,7 +52,6 @@
 
 <script type="text/ecmascript-6">
 import modal from '@/components/modal';
-import formatCurrency from '@/util/format-currency';
 
 export default {
   components: {modal},
@@ -113,18 +112,31 @@ export default {
           this.busy = !res.data.result.length;
         })
     },
-    addCart () {
-      // this.successMdShow = true;
-      this.noAccessMdShow = true;
+    addCart (productId) {
+      this.axios.get('/user/checkLogin')
+        .then(res => {
+          if (res.data.status === 0) {
+            let params = {
+              userId: res.data.result,
+              productId: productId
+            };
+            this.axios.post('/goods/add', params)
+              .then(res => {
+                if (res.data.status === 0) {
+                  this.successMdShow = true;
+                  this.$store.commit('addCartCount', 1);
+                }
+              })
+          } else {
+            this.noAccessMdShow = true;
+          }
+        })
     },
     closeSuccessMd () {
       this.successMdShow = false;
     },
     closeNoAccessMd () {
       this.noAccessMdShow = false;
-    },
-    seeCart () {
-      this.$router.push({path: '/cart'});
     },
     loadMore () {
       if (!this.loading) {
@@ -150,8 +162,7 @@ export default {
     isInRange (item) {
       return item.start === this.priceStart && item.end === this.priceEnd;
     }
-  },
-  filters: {formatCurrency}
+  }
 }
 
 </script>
