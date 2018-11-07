@@ -9,10 +9,10 @@ var userSchema = new mongoose.Schema({
     {
       'productId': String,
       'productName': String,
-      'salePrice': String,
+      'salePrice': Number,
       'productImage': String,
-      'checked': String,
-      'productNum': String
+      'checked': Boolean,
+      'productNum': Number
     }
   ],
   'addressList': [

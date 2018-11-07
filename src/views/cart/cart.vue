@@ -14,7 +14,7 @@
       <ul class='tbody'>
         <li class='tr' v-for="item in cartList" :key="item._id">
           <div class="cart-tab-1 td">
-            <input type="checkbox" class="checkbox">
+            <input type="checkbox" class="checkbox" v-model="item.checked" @change="editCart(item.checked, item.productNum, item)">
             <img :src="'/static/images/' + item.productImage">
             <span class="product-name">{{item.productName}}</span>
           </div>
@@ -23,9 +23,9 @@
           </div>
           <div class="cart-tab-3 td">
             <div class="select-area">
-              <span class="subtract-btn">-</span>
+              <span class="subtract-btn" @click="editCart(item.checked, Number(item.productNum) - 1, item)">-</span>
               <span class="product-num">{{item.productNum}}</span>
-              <span class="add-btn">+</span>
+              <span class="add-btn" @click="editCart(item.checked, Number(item.productNum) + 1, item)">+</span>
             </div>
           </div>
           <div class="cart-tab-4 td">
@@ -40,7 +40,7 @@
     <div class="footer clearfix">
       <div class="footer-left">
         <label for="selectAll">
-          <input type="checkbox" class="checkbox" id="selectAll">Select all</label>
+          <input type="checkbox" class="checkbox" id="selectAll" @change="toggleSelect()">Select all</label>
       </div>
       <div class="footer-right">
         <div>Item total:<span class="item-total">{{total | currency('￥', 2)}}</span></div>
@@ -68,6 +68,9 @@ export default {
         total += item.productNum * item.salePrice;
       });
       return total;
+    },
+    isCheckAll () {
+      return this.cartList.every(item => item.checked);
     }
   },
   methods: {
@@ -78,6 +81,28 @@ export default {
             this.cartList = res.data.result;
           }
         })
+    },
+    editCart (checked, num, item) {
+      num = num >= 0 ? num : 0;
+      let difference = num - item.productNum;
+      item.productNum = num;
+      let params = {
+        productNum: item.productNum,
+        checked: checked
+      };
+      this.axios.post('/user/editCart', params)
+        .then(res => {
+          if (res.data.status === 0) {
+            this.$store.commit('addCartCount', difference);
+          }
+        })
+    },
+    toggleSelect () {
+      console.log('check')
+      let params = {
+        isCheckAll: !this.isCheckAll
+      };
+      this.axios.post('/user/checkAllCart', params)
     }
   }
 }
@@ -183,6 +208,13 @@ export default {
     font-size: 16px;
     overflow: hidden;
     background: #f0f0f0;
+    user-select: none;
+  }
+
+  .table .tr .select-area .subtract-btn:hover,
+  .table .tr .select-area .add-btn:hover {
+    background: #ccc;
+    cursor: pointer;
   }
 
   .table .tr .select-area .product-num {

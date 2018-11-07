@@ -9,8 +9,8 @@ router.get('/', function (req, res) {
 
 router.post('/login', function (req, res, next) {
   var params = {
-    userName: req.body.userName,
-    userPwd: req.body.userPwd
+    'userName': req.body.userName,
+    'userPwd': req.body.userPwd
   };
   User.findOne(params, function (err, doc) {
     if (err) {
@@ -74,9 +74,38 @@ router.get('/checkLogin', function (req, res, next) {
 
 router.get('/cartList', function (req, res, next) {
   var params = {
-    userId: req.cookies.userId
+    'userId': req.cookies.userId
   };
   User.findOne(params, function (err, doc) {
+    if (err) {
+      res.json({
+        status: 1,
+        message: err.message
+      });
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          message: 'success',
+          result: doc.cartList
+        });
+      }
+    }
+  });
+});
+
+router.post('/deleteCart', function (req, res, next) {
+  var userId = req.cookies.userId;
+  var productId = req.body.productId;
+  User.update({
+    'userId': userId
+  }, {
+    $pull: { // $pull删除数组对应元素
+      'cartList': {
+        'productId': productId
+      }
+    }
+  }, function (err, doc) {
     if (err) {
       res.json({
         status: 1,
@@ -86,8 +115,70 @@ router.get('/cartList', function (req, res, next) {
       res.json({
         status: 0,
         message: 'success',
-        result: doc.cartList
+        result: ''
       });
+    }
+  });
+});
+
+router.post('/editCart', function (req, res, next) {
+  var userId = req.cookies.userId;
+  var productId = req.body.productId;
+  var checked = req.body.checked;
+  var productNum = req.body.productNum;
+  User.update({
+    'userId': userId,
+    'cateList.productId': productId
+  }, {
+    $set: {
+      'cartList.checked': checked,
+      'cartList.productNum': productNum
+    }
+  }, function (err, doc) {
+    if (err) {
+      res.json({
+        status: 0,
+        message: err.message
+      });
+    } else {
+      res.json({
+        status: 0,
+        message: 'success',
+        result: ''
+      });
+    }
+  });
+});
+
+router.post('/checkAllCart', function (req, res, next) {
+  var userId = req.cookies.userId;
+  var isCheckAll = req.body.isCheckAll;
+  User.findOne({'userId': userId}, function (err, userDoc) {
+    if (err) {
+      res.json({
+        status: 1,
+        message: err.message
+      });
+    } else {
+      if (userDoc) {
+        userDoc.cartList.forEach(function (item) {
+          item.checked = isCheckAll;
+        });
+        userDoc.save(function (err, doc) {
+          if (err) {
+            res.json({
+              status: 1,
+              message: err.message
+            });
+          } else {
+            res.json({
+              status: 0,
+              message: 'success',
+              result: ''
+            });
+          }
+        });
+      }
     }
   });
 });
