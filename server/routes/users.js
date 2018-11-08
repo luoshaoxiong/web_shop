@@ -28,12 +28,16 @@ router.post('/login', function (req, res, next) {
           path: '/',
           maxAge: 60 * 60 * 1000
         });
+        var count = 0;
+        doc.cartList.forEach(function (item) {
+          count += item.productNum;
+        });
         res.json({
           status: 0,
           message: 'success',
           result: {
             userName: doc.userName,
-            cartCount: doc.cartList.length
+            cartCount: count
           }
         });
       }
@@ -126,14 +130,12 @@ router.post('/editCart', function (req, res, next) {
   var productId = req.body.productId;
   var checked = req.body.checked;
   var productNum = req.body.productNum;
-  User.update({
+  User.updateOne({
     'userId': userId,
-    'cateList.productId': productId
+    'cartList.productId': productId
   }, {
-    $set: {
-      'cartList.checked': checked,
-      'cartList.productNum': productNum
-    }
+    'cartList.$.checked': checked,
+    'cartList.$.productNum': productNum
   }, function (err, doc) {
     if (err) {
       res.json({
@@ -176,6 +178,103 @@ router.post('/checkAllCart', function (req, res, next) {
               message: 'success',
               result: ''
             });
+          }
+        });
+      }
+    }
+  });
+});
+
+router.get('/addressList', function (req, res, next) {
+  var params = {
+    userId: req.cookies.userId
+  };
+  User.findOne(params, function (err, doc) {
+    if (err) {
+      res.json({
+        status: 1,
+        message: err.message
+      });
+    } else {
+      if (doc) {
+        res.json({
+          status: 0,
+          message: 'success',
+          result: doc.addressList
+        })
+      }
+    }
+  });
+});
+
+router.post('/addAddress', function (req, res, next) {
+  var userId = req.cookies.userId;
+  var userName = req.body.userName;
+  var streetName = req.body.streetName;
+  var postCode = req.body.postCode;
+  var tel = req.body.tel;
+  var isDefault = req.body.isDefault;
+  User.updateOne({
+    'userId': userId
+  }, {
+    $push: {
+      'addressList': {
+        'userName': userName,
+        'streetName': streetName,
+        'postCode': postCode,
+        'tel': tel,
+        'isDefault': isDefault
+      }
+    }
+  }, function (err, doc) {
+    if (err) {
+      res.json({
+        status: 1,
+        message: err.message
+      });
+    } else {
+      res.json({
+        status: 0,
+        message: 'success',
+        result: ''
+      })
+    }
+  });
+});
+
+router.post('/setDefault', function (req, res, next) {
+  var addressId = req.body._id;
+  var params = {
+    'userId': req.cookies.userId,
+    'addressList._id': addressId
+  };
+  User.findOne(params, function (err, userDoc) {
+    if (err) {
+      res.json({
+        status: 1,
+        message: err.message
+      });
+    } else {
+      if (userDoc) {
+        userDoc.addressList.forEach(function (item) {
+          if (item._id === addressId) {
+            item.isDefault = true;
+          } else {
+            item.isDefault = false;
+          }
+        });
+        userDoc.save(function (err, doc) {
+          if (err) {
+            res.json({
+              status: 1,
+              message: err.message
+            });
+          } else {
+            res.json({
+              status: 0,
+              message: 'success',
+              result: ''
+            })
           }
         });
       }

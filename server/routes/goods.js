@@ -101,6 +101,7 @@ router.post('/add', function (req, res, next) {
           } else {
             productDoc.productNum = 1;
             productDoc.checked = true;
+            console.log('here', productDoc);
             userDoc.cartList.push(productDoc);
             userDoc.save(function (err, doc) {
               if (err) {

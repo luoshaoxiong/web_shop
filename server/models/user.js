@@ -17,7 +17,6 @@ var userSchema = new mongoose.Schema({
   ],
   'addressList': [
     {
-      'addressId': String,
       'userName': String,
       'streetName': String,
       'postCode': Number,

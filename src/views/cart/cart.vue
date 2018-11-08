@@ -14,7 +14,7 @@
       <ul class='tbody'>
         <li class='tr' v-for="item in cartList" :key="item._id">
           <div class="cart-tab-1 td">
-            <input type="checkbox" class="checkbox" v-model="item.checked" @change="editCart(item.checked, item.productNum, item)">
+            <input type="checkbox" class="checkbox" :value="item" v-model="checkedProducts" @change="editCart(!item.checked, item.productNum, item)">
             <img :src="'/static/images/' + item.productImage">
             <span class="product-name">{{item.productName}}</span>
           </div>
@@ -32,7 +32,7 @@
             <span class="total-price">{{item.salePrice | currency('￥', 2)}}</span>
           </div>
           <div class="cart-tab-5 td">
-            <span class="icon iconfont icon-shanchuicon"></span>
+            <span class="icon iconfont icon-shanchuicon" @click="deleteCart(item.productId)"></span>
           </div>
         </li>
       </ul>
@@ -40,7 +40,7 @@
     <div class="footer clearfix">
       <div class="footer-left">
         <label for="selectAll">
-          <input type="checkbox" class="checkbox" id="selectAll" @change="toggleSelect()">Select all</label>
+          <input type="checkbox" class="checkbox" id="selectAll" v-model="isCheckAll">Select all</label>
       </div>
       <div class="footer-right">
         <div>Item total:<span class="item-total">{{total | currency('￥', 2)}}</span></div>
@@ -55,7 +55,8 @@ export default {
   name: 'cart',
   data () {
     return {
-      cartList: []
+      cartList: [],
+      checkedProducts: []
     }
   },
   mounted () {
@@ -65,12 +66,19 @@ export default {
     total () {
       var total = 0;
       this.cartList.forEach(item => {
-        total += item.productNum * item.salePrice;
+        if (item.checked) {
+          total += item.productNum * item.salePrice;
+        }
       });
       return total;
     },
-    isCheckAll () {
-      return this.cartList.every(item => item.checked);
+    isCheckAll: {
+      get: function () {
+        return this.cartList.every(item => item.checked);
+      },
+      set: function () {
+        this.toggleSelect();
+      }
     }
   },
   methods: {
@@ -79,6 +87,7 @@ export default {
         .then(res => {
           if (res.data.status === 0) {
             this.cartList = res.data.result;
+            this.checkedProducts = this.cartList.filter(item => item.checked);
           }
         })
     },
@@ -87,6 +96,7 @@ export default {
       let difference = num - item.productNum;
       item.productNum = num;
       let params = {
+        productId: item.productId,
         productNum: item.productNum,
         checked: checked
       };
@@ -94,21 +104,39 @@ export default {
         .then(res => {
           if (res.data.status === 0) {
             this.$store.commit('addCartCount', difference);
+            this.getCartList();
           }
         })
     },
     toggleSelect () {
-      console.log('check')
       let params = {
         isCheckAll: !this.isCheckAll
       };
       this.axios.post('/user/checkAllCart', params)
+        .then(res => {
+          if (res.data.status === 0) {
+            this.getCartList();
+          }
+        })
+    },
+    deleteCart (productId) {
+      let params = {
+        productId: productId
+      };
+      this.axios.post('/user/deleteCart', params)
+        .then(res => {
+          if (res.data.status === 0) {
+            this.getCartList();
+          }
+        })
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import '../../assets/css/variable';
+
   .title {
     padding: 40px 0 20px;
     font-size: 22px;
@@ -213,7 +241,7 @@ export default {
 
   .table .tr .select-area .subtract-btn:hover,
   .table .tr .select-area .add-btn:hover {
-    background: #ccc;
+    background: #dfdfdf;
     cursor: pointer;
   }
 
@@ -232,6 +260,15 @@ export default {
 
   .table .tr .total-price {
     color: #d1434a;
+  }
+
+  .icon-shanchuicon::before {
+    font-size: 18px;
+  }
+
+  .icon-shanchuicon:hover {
+    cursor: pointer;
+    color: $color-main;
   }
 
   .cart-tab-1 {

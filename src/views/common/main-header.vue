@@ -29,8 +29,8 @@ export default {
     return {
       loginShow: false,
       errorShow: false,
-      name: '',
-      password: ''
+      name: 'admin',
+      password: '123456'
     }
   },
   computed: {
