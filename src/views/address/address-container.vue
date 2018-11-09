@@ -2,7 +2,8 @@
   <div class="container">
     <h2>Shipping address</h2>
     <div class="clearfix">
-      <div v-for="(item, index) in address" class='box' :class="{'active': currentAddress === index}" :key="index">
+      <div v-for="(item, index) in addressList" class='box' :class="{'active': currentAddress === item._id}"
+           @click="setDefault(item._id)" :key="index">
         <dl>
           <dt class="username">{{item.userName}}</dt>
           <dd class="post-code">{{item.postCode}}{{item.streetName}}</dd>
@@ -10,39 +11,88 @@
           <dd class="default-address" v-show="item.isDefault">Default address</dd>
         </dl>
       </div>
-      <div class="box add-new">
+      <div class="box add-new" @click="showMd()">
         <span class="add-icon">+</span>
         <span>Add new address</span>
       </div>
     </div>
     <div class="more-btn">more</div>
+    <modal :show="modalShow" @close="closeMd()">
+      <input placeholder="请输入收件人姓名" v-model="modalData.userName">
+      <input placeholder="请输入详细地址" v-model="modalData.streetName">
+      <input placeholder="请输入邮政编码" v-model.number="modalData.postCode">
+      <input placeholder="请输入手机号码" v-model.number="modalData.tel">
+      <p v-show="errorTip" class="error">{{errorTip}}</p>
+      <button class="btn btn-main login-btn" @click="addAddress()">创建</button>
+    </modal>
   </div>
 </template>
 
 <script>
+import modal from '@/components/modal';
+
 export default {
   name: 'address-container',
+  components: {modal},
   data () {
     return {
-      address: [
-        {
-          'addressId': '100008',
-          'userName': 'Frank',
-          'streetName': '北京市海淀区中关村软件园',
-          'postCode': '100011',
-          'tel': 10125652345,
-          'isDefault': true
-        },
-        {
-          'addressId': '100009',
-          'userName': 'Frank',
-          'streetName': '北京市海淀区中关村软件园',
-          'postCode': '100011',
-          'tel': 10125652345,
-          'isDefault': true
-        }
-      ],
-      currentAddress: 0
+      addressList: [],
+      currentAddress: '',
+      modalShow: false,
+      modalData: {
+        userName: '',
+        streetName: '',
+        postCode: '',
+        tel: ''
+      },
+      errorTip: ''
+    }
+  },
+  mounted () {
+    this.getList();
+  },
+  methods: {
+    getList () {
+      this.axios.get('/user/addressList')
+        .then(res => {
+          if (res.data.status === 0) {
+            this.addressList = res.data.result;
+            this.currentAddress = (this.addressList.filter(item => item.isDefault === true)[0] || {})._id;
+          }
+        })
+    },
+    setDefault (id) {
+      let params = {
+        _id: id
+      };
+      this.axios.post('/user/setDefault', params)
+        .then(res => {
+          if (res.data.status === 0) {
+            this.getList();
+          }
+        })
+    },
+    showMd () {
+      this.modalShow = true;
+    },
+    closeMd () {
+      this.modalShow = false;
+    },
+    addAddress () {
+      let params = {
+        userName: this.modalData.userName,
+        streetName: this.modalData.streetName,
+        postCode: this.modalData.postCode,
+        tel: this.modalData.tel
+      };
+      this.axios.post('/user/addAddress', params)
+        .then(res => {
+          if (res.data.status === 0) {
+            this.getList();
+          }
+        })
+    },
+    check () {
     }
   }
 }
