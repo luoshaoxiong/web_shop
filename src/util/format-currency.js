@@ -5,10 +5,10 @@ function formatCurrency (value, currency, decimals) {
   if (isFinite(value)) {
     currency = currency || '$';
     decimals = decimals || 2;
-    value = Math.abs(value).toFixed(decimals);
+    let stringified = Math.abs(value).toFixed(decimals);
 
-    let intPart = decimals > 0 ? value.slice(0, -1 - decimals) : value;
-    let decimalPart = decimals > 0 ? value.slice(-decimals) : '';
+    let intPart = decimals > 0 ? stringified.slice(0, -1 - decimals) : stringified;
+    let decimalPart = decimals > 0 ? stringified.slice(-decimals) : '';
     let sign = value >= 0 ? '' : '-';
     let split = decimals > 0 ? '.' : '';
     intPart = intPart.split('').reverse().join('').replace(reg, '$1,').split('').reverse().join('');

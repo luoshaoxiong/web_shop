@@ -2,8 +2,8 @@
   <div class="container">
     <h2>Shipping address</h2>
     <div class="clearfix">
-      <div v-for="(item, index) in addressList" class='box' :class="{'active': currentAddress === item._id}"
-           @click="setDefault(item._id)" :key="index">
+      <div v-for="(item, index) in addressList" class='box' :class="{'active': currentAddress === item.addressId}"
+           @click="setDefault(item.addressId)" :key="index">
         <dl>
           <dt class="username">{{item.userName}}</dt>
           <dd class="post-code">{{item.postCode}}{{item.streetName}}</dd>
@@ -57,13 +57,13 @@ export default {
         .then(res => {
           if (res.data.status === 0) {
             this.addressList = res.data.result;
-            this.currentAddress = (this.addressList.filter(item => item.isDefault === true)[0] || {})._id;
+            this.currentAddress = (this.addressList.filter(item => item.isDefault === true)[0] || {}).addressId;
           }
         })
     },
     setDefault (id) {
       let params = {
-        _id: id
+        addressId: id
       };
       this.axios.post('/user/setDefault', params)
         .then(res => {
@@ -79,20 +79,29 @@ export default {
       this.modalShow = false;
     },
     addAddress () {
-      let params = {
-        userName: this.modalData.userName,
-        streetName: this.modalData.streetName,
-        postCode: this.modalData.postCode,
-        tel: this.modalData.tel
-      };
-      this.axios.post('/user/addAddress', params)
-        .then(res => {
-          if (res.data.status === 0) {
-            this.getList();
-          }
-        })
+      if (this.check()) {
+        let params = {
+          userName: this.modalData.userName,
+          streetName: this.modalData.streetName,
+          postCode: this.modalData.postCode,
+          tel: this.modalData.tel
+        };
+        this.axios.post('/user/addAddress', params)
+          .then(res => {
+            if (res.data.status === 0) {
+              this.closeMd();
+              this.getList();
+            }
+          })
+      }
     },
     check () {
+      if (!this.modalData.userName || !this.modalData.streetName || !this.modalData.postCode || !this.modalData.tel) {
+        this.errorTip = '请完整填写以上信息';
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 }

@@ -18,27 +18,25 @@
             <span class='product-name'>{{item.productName}}</span>
           </div>
           <div class='cart-tab-2 td'>
-            <span class='price'>￥{{item.salePrice}}</span>
+            <span class='price'>{{item.salePrice | currency('￥', 2)}}</span>
           </div>
           <div class='cart-tab-3 td'>
             <div class='select-area'>
-              <span class='subtract-btn'>-</span>
               <span class='product-num'>{{item.productNum}}</span>
-              <span class='add-btn'>+</span>
             </div>
           </div>
           <div class='cart-tab-4 td'>
-            <span class='total-price'>￥{{item.salePrice}}</span>
+            <span class='total-price'>{{item.salePrice * item.productNum | currency('￥', 2)}}</span>
           </div>
         </li>
       </ul>
     </div>
     <ul class="price-count-wrap">
-      <li><span>Item subtotal:</span><span class="price-text">￥10.00</span></li>
-      <li><span>Shipping:</span><span class="price-text">￥10.00</span></li>
-      <li><span>Discount:</span><span class="price-text">￥10.00</span></li>
-      <li><span>Tax:</span><span class="price-text">￥10.00</span></li>
-      <li><span>Order total:</span><span class="price-text">￥100.00</span></li>
+      <li><span>Item subtotal:</span><span class="price-text">{{subTotal | currency('￥', 2)}}</span></li>
+      <li><span>Shipping:</span><span class="price-text">{{price.shipping | currency('￥', 2)}}</span></li>
+      <li><span>Discount:</span><span class="price-text">{{price.discount | currency('￥', 2)}}</span></li>
+      <li><span>Tax:</span><span class="price-text">{{price.tax | currency('￥', 2)}}</span></li>
+      <li><span>Order total:</span><span class="price-text order-total">{{orderTotal | currency('￥', 2)}}</span></li>
     </ul>
     <footer class="clearfix">
       <router-link class="btn btn-plain previous" to="/address">Previous</router-link>
@@ -57,34 +55,37 @@ export default {
     return {
       steps: ['Confirm Address', 'View Your Order', 'Make Payment', 'Order Confirmation'],
       currentStep: 1,
-      cartList: [
-        {
-          'productImage': '2.jpg',
-          'salePrice': '80',
-          'productName': '头戴式耳机-3',
-          'productId': '201710004',
-          '_id': '58c284d7117a2e6599abef5e',
-          'productNum': '8',
-          'checked': '1'
-        },
-        {
-          'productImage': '6.jpg',
-          'salePrice': '59',
-          'productName': '智能插线板',
-          'productId': '201710002',
-          '_id': '58e704ef98dab115d336b3f1',
-          'productNum': '2',
-          'checked': '1'
-        },
-        {
-          'productImage': 'zipai.jpg',
-          'salePrice': '39',
-          'productName': '自拍杆',
-          'productId': '201710007',
-          '_id': '58e7050398dab115d336b3f2',
-          'productNum': '1'
-        }
-      ]
+      cartList: [],
+      price: {
+        shipping: 10,
+        discount: -10,
+        tax: 0
+      }
+    }
+  },
+  computed: {
+    subTotal () {
+      let subTotal = 0;
+      this.cartList.forEach(item => {
+        subTotal += item.salePrice * item.productNum;
+      });
+      return subTotal;
+    },
+    orderTotal () {
+      return this.subTotal + this.price.shipping + this.price.discount + this.price.tax;
+    }
+  },
+  mounted () {
+    this.getCheckedList();
+  },
+  methods: {
+    getCheckedList () {
+      this.axios.get('/user/cartList')
+        .then(res => {
+          if (res.data.status === 0) {
+            this.cartList = res.data.result.filter(item => item.checked);
+          }
+        })
     }
   }
 }
@@ -264,6 +265,11 @@ export default {
   .price-count-wrap li .price-text {
     width: 100px;
     color: #666;
+  }
+
+  .price-count-wrap li .order-total {
+    font-weight: bold;
+    color: #d1434a;
   }
 
   footer {

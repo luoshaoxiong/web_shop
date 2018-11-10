@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var uuid = require('uuid/v4');
 var User = require('../models/user');
 
 /* GET users listing. */
@@ -213,12 +214,13 @@ router.post('/addAddress', function (req, res, next) {
   var streetName = req.body.streetName;
   var postCode = req.body.postCode;
   var tel = req.body.tel;
-  var isDefault = req.body.isDefault;
+  var isDefault = false;
   User.updateOne({
     'userId': userId
   }, {
     $push: {
       'addressList': {
+        'addressId': uuid(),
         'userName': userName,
         'streetName': streetName,
         'postCode': postCode,
@@ -243,10 +245,10 @@ router.post('/addAddress', function (req, res, next) {
 });
 
 router.post('/setDefault', function (req, res, next) {
-  var addressId = req.body._id;
+  var addressId = req.body.addressId;
   var params = {
     'userId': req.cookies.userId,
-    'addressList._id': addressId
+    'addressList.addressId': addressId
   };
   User.findOne(params, function (err, userDoc) {
     if (err) {
@@ -257,7 +259,7 @@ router.post('/setDefault', function (req, res, next) {
     } else {
       if (userDoc) {
         userDoc.addressList.forEach(function (item) {
-          if (item._id === addressId) {
+          if (item.addressId === addressId) {
             item.isDefault = true;
           } else {
             item.isDefault = false;
