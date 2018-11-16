@@ -2,8 +2,11 @@
   <nav>
     <div class="layout-container">
       <div class="nav-container">
-        <a href="/">Home</a>
-        <slot></slot>
+        <a class="home" href="/">Home</a>
+        <span class="split">/</span>
+        <span class="current-path">
+          <slot></slot>
+        </span>
       </div>
     </div>
   </nav>
@@ -22,8 +25,22 @@ export default {
     height: $breadcrumb;
     line-height: $breadcrumb;
     background-color: #f0f0f0;
-  }
 
-  .nav-container {
+    .home {
+      color: #aaa;
+
+      &:hover {
+        color: $color-red;
+      }
+    }
+
+    .split {
+      margin: 0 4px;
+      color: #aaa;
+    }
+
+    .current-path {
+      color: $color-red;
+    }
   }
 </style>

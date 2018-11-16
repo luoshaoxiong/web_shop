@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <main-header></main-header>
-    <breadcrumb></breadcrumb>
+    <breadcrumb>{{$route.path | formatPath}}</breadcrumb>
     <div class="layout-container">
       <router-view/>
     </div>
@@ -9,12 +9,17 @@
 </template>
 
 <script>
-import mainHeader from '@/views/common/main-header'
-import breadcrumb from '@/components/breadcrumb'
+import mainHeader from '@/views/common/main-header';
+import breadcrumb from '@/components/breadcrumb';
 
 export default {
   name: 'App',
-  components: {mainHeader, breadcrumb}
+  components: {mainHeader, breadcrumb},
+  filters: {
+    formatPath (path) {
+      return path.slice(1);
+    }
+  }
 }
 </script>
 

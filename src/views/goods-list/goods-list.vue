@@ -93,6 +93,7 @@ export default {
   },
   mounted () {
     this.getGoodsList();
+    console.log(this.$router, this.$route)
   },
   methods: {
     getGoodsList () {
