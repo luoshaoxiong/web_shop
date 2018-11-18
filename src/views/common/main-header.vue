@@ -3,6 +3,7 @@
     <div class="layout-container">
       <div class="logo-container">
         <img class="logo" src="../../assets/logo.png">
+        <h2>WebShop</h2>
       </div>
       <div class="menu-container">
         <span class="user-msg link" v-if="!userName" @click="loginShow = true">Login</span>
@@ -72,77 +73,89 @@ export default {
     background-color: #fff;
     height: $header-height;
     line-height: $header-height;
-  }
 
-  .logo-container {
-    float: left;
-    height: $header-height;
-  }
+    .logo-container {
+      float: left;
+      height: $header-height;
 
-  .logo {
-    height: $header-height;
-    padding: 16px;
-  }
+      .logo {
+        float: left;
+        height: $header-height;
+        padding: 16px;
+      }
 
-  .menu-container {
-    float: right;
-    height: $header-height;
-  }
+      h2 {
+        float: left;
+        vertical-align: text-bottom;
+        font-size: 28px;
+        letter-spacing: 0.1em;
+        color: #42b883;
+        font-weight: bold;
+      }
+    }
 
-  .user-msg {
-    margin-left: 14px;
-    font-size: 16px;
-  }
+    .menu-container {
+      float: right;
+      height: $header-height;
 
-  .link:hover {
-    color: $color-main;
-    cursor: pointer;
-  }
+      .user-msg {
+        margin-left: 14px;
+        font-size: 16px;
+      }
 
-  .icon-cart {
-    margin-left: 20px;
-    cursor: pointer;
-  }
+      .link:hover {
+        color: $color-main;
+        cursor: pointer;
+      }
 
-  .icon-cart::before {
-    font-size: 20px;
-  }
+      .icon-cart {
+        margin-left: 20px;
+        cursor: pointer;
 
-  .icon-cart .cart-count {
-    display: inline-block;
-    position: relative;
-    top: -12px;
-    left: -5px;
-    min-width: 18px;
-    height: 18px;
-    line-height: 18px;
-    padding: 0 6px;
-    border-radius: 50%;
-    background-color: #eb767d;
-    text-align: center;
-    color: #fff;
-    font-weight: bold;
-  }
+        &::before {
+          font-size: 20px;
+        }
 
-  .modal input {
-    display: block;
-    width: 100%;
-    height: 42px;
-    border: 1px solid #ccc;
-    padding: 0 12px;
-    margin-bottom: 30px;
-  }
+        .cart-count {
+          display: inline-block;
+          position: relative;
+          top: -12px;
+          left: -5px;
+          min-width: 18px;
+          height: 18px;
+          line-height: 18px;
+          padding: 0 6px;
+          border-radius: 50%;
+          background-color: #eb767d;
+          text-align: center;
+          color: #fff;
+          font-weight: bold;
+        }
+      }
+    }
 
-  .modal .error {
-    height: 16px;
-    margin-top: -20px;
-    margin-bottom: 20px;
-    line-height: 16px;
-    color: red;
-  }
+    .modal {
+      input {
+        display: block;
+        width: 100%;
+        height: 42px;
+        border: 1px solid #ccc;
+        padding: 0 12px;
+        margin-bottom: 30px;
+      }
 
-  .modal .login-btn {
-    display: block;
-    width: 100%;
+      .error {
+        height: 16px;
+        margin-top: -20px;
+        margin-bottom: 20px;
+        line-height: 16px;
+        color: red;
+      }
+
+      .login-btn {
+        display: block;
+        width: 100%;
+      }
+    }
   }
 </style>
